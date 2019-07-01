@@ -12,7 +12,7 @@
     integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
   <!--firebase-->
   <script src="https://www.gstatic.com/firebasejs/6.2.4/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/6.2.4/firebase-firestore.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/6.2.4/firebase-database.js"></script>
 </head>
 
 <body>
@@ -20,17 +20,33 @@
     <h1>RPS</h1>
   </header>
   <main>
+
     <form id="start">
       <input id="player-name" type="text" placeholder="">
       <input id="submit-name" type="submit" val="Start">
     </form>
-    <div id="player1"></div>
-    <div id="player2"></div>
-    <form>
-      <input id="player-msg" type="text" placeholder="">
-      <input id="submit-msg" type="text" val="Send">
-      <div id="msg-board"></div>
-    </form>
+
+    <section id="game">
+
+      <div id="game-message"></div>
+      <div id="player1">
+        <div id=player1-name></div>
+        <div id="player1-choices"></div>
+      </div>
+
+      <div id="player2">
+        <div id=player2-name></div>
+        <div id="player2-choices"></div>
+      </div>
+
+      <form>
+        <input id="player-msg" type="text" placeholder="">
+        <input id="submit-msg" type="text" val="Send">
+        <div id="msg-display"></div>
+      </form>
+
+    </section>
+
   </main>
 
   <!--Javascript-->
