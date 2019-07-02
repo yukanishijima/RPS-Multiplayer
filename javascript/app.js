@@ -16,10 +16,9 @@ var db = firebase.database();
 
 //initial values
 var player = "";
-var player1Name = "";
-var player2Name = "";
-var player1Choice = "";
-var player2Choice = "";
+var playersRef = db.ref("/players");
+var player1Ref = db.ref("/players/player1");
+var player2Ref = db.ref("/players/player2");
 
 
 $("#submit-name").on("click", function (event) {
@@ -27,39 +26,31 @@ $("#submit-name").on("click", function (event) {
 
   //runs only when there's a value 
   if ($("#player-name").val().length !== 0) {
-
     player = $("#player-name").val().trim();
 
-    db.ref().once("value", function (snapshot) {
-
-      console.log(snapshot);
+    playersRef.once("value", function (snapshot) {
 
       //if player1 doesn't exist, assign as player 1
       if (!snapshot.child("player1").exists()) {
-        db.ref("/player1").set({
+        player1Ref.set({
           player1Name: player
         });
-        $("#player1-name").html(player);
         $("#game-message").html("Welcome " + player + "! You're Player 1!");
         $("#start").hide();
-        db.ref().onDisconnect().remove();
+        player1Ref.onDisconnect().remove();
 
-        console.log(db.ref());
-        console.log(db.ref("/player1/player1Name"));
         console.log(snapshot);
-        console.log(snapshot.val());
-        console.log(snapshot.child("player1/player1Name").val());
-        console.log(snapshot.child("player1").val());
+        console.log(snapshot.child("player1").val());  //why null?
+        console.log(snapshot.child("player1").val().player1Name);  //why not working?
 
         //if player1 exists, assign as player 2
       } else if (!snapshot.child("player2").exists()) {
-        db.ref("/player2").set({
+        player2Ref.set({
           player2Name: player
         });
-        $("#player2-name").html(player);
         $("#game-message").html("Welcome " + player + "! You're Player 2!");
         $("#start").hide();
-        db.ref().onDisconnect().remove();
+        player2Ref.onDisconnect().remove();
 
         // if both player 1 and 2 exist, display the message
       } else {
@@ -72,4 +63,28 @@ $("#submit-name").on("click", function (event) {
   }
 });
 
+//display player1's name
+player1Ref.on("value", function (snapshot) {
+  if (snapshot.val() !== null) {
+    var name = snapshot.val().player1Name;
+    $("#player1-name").html(name);
+    $("#msg-display").append("<p>" + name + " joined the game!</p>");
+  } else if (snapshot.val() === null) {
+    //if player 1 leaves the game
+    console.log("no player 1!");
+    $("#player1-name").html("<p>Waiting for Player 1 to join!</p>");
+  }
+});
 
+//display player2's name
+player2Ref.on("value", function (snapshot) {
+  if (snapshot.val() !== null) {
+    var name = snapshot.val().player2Name;
+    $("#player2-name").html(name);
+    $("#msg-display").append("<p>" + name + " joined the game!</p>");
+  } else if (snapshot.val() === null) {
+    //if player 2 leaves the game
+    console.log("no player 2!");
+    $("#player2-name").html("<p>Waiting for Player 2 to join!</p>");
+  }
+});
