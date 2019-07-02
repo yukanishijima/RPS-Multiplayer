@@ -25,36 +25,51 @@ var player2Choice = "";
 $("#submit-name").on("click", function (event) {
   event.preventDefault();
 
-  player = $("#player-name").val().trim();
+  //runs only when there's a value 
+  if ($("#player-name").val().length !== 0) {
 
-  db.ref().once("value", function (snapshot) {
+    player = $("#player-name").val().trim();
 
-    //if player1 doesn't exist, assign as player 1
-    if (!snapshot.child("player1").exists()) {
-      db.ref("player1").set({
-        player1Name: player
-      });
-      $("#player1-name").html(player);
-      $("#game-message").html("Welcome " + player + "! You're Player 1!");
-      $("#start").hide();
+    db.ref().once("value", function (snapshot) {
 
-      //if player1 exists, assign as player 2
-    } else if (!snapshot.child("player2").exists()) {
-      db.ref("player2").set({
-        player2Name: player
-      });
-      $("#player2-name").html(player);
-      $("#game-message").html("Welcome " + player + "! You're Player 2!");
-      $("#start").hide();
+      console.log(snapshot);
 
-      // if both player 1 and 2 exist, display the message
-    } else {
-      $("#start").html("Sorry, the game is full!");
-    }
+      //if player1 doesn't exist, assign as player 1
+      if (!snapshot.child("player1").exists()) {
+        db.ref("/player1").set({
+          player1Name: player
+        });
+        $("#player1-name").html(player);
+        $("#game-message").html("Welcome " + player + "! You're Player 1!");
+        $("#start").hide();
+        db.ref().onDisconnect().remove();
 
-  }, function (errorObject) {
-    console.log("The read failed: " + errorObject.code);
-  });
+        console.log(db.ref());
+        console.log(db.ref("/player1/player1Name"));
+        console.log(snapshot);
+        console.log(snapshot.val());
+        console.log(snapshot.child("player1/player1Name").val());
+        console.log(snapshot.child("player1").val());
+
+        //if player1 exists, assign as player 2
+      } else if (!snapshot.child("player2").exists()) {
+        db.ref("/player2").set({
+          player2Name: player
+        });
+        $("#player2-name").html(player);
+        $("#game-message").html("Welcome " + player + "! You're Player 2!");
+        $("#start").hide();
+        db.ref().onDisconnect().remove();
+
+        // if both player 1 and 2 exist, display the message
+      } else {
+        $("#start").html("Sorry, the game is full!");
+      }
+
+    }, function (errorObject) {
+      console.log("The read failed: " + errorObject.code);
+    });
+  }
 });
 
 
