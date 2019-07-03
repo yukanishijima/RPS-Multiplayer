@@ -20,8 +20,10 @@ var connectedRef = db.ref(".info/connected");
 var playersRef = db.ref("/players");
 var player1Ref = db.ref("/players/player1");
 var player2Ref = db.ref("/players/player2");
+var chatRef = db.ref("/chat");
 var player1 = false;
 var player2 = false;
+
 
 //when someone clicks "start" button, display on his page
 $("#submit-name").on("click", function (event) {
@@ -88,6 +90,7 @@ player1Ref.on("value", function (snapshot) {
   }
 });
 
+// display player2's name on any page
 player2Ref.on("value", function (snapshot) {
   // when no player 1 or player 1 leaves the game
   if (snapshot.val() === null) {
@@ -102,6 +105,29 @@ player2Ref.on("value", function (snapshot) {
   }
 });
 
+//chat function
+$("#submit-msg").on("click", function (event) {
+  event.preventDefault();
+
+  //runs only when there's a value 
+  if ($("#player-msg").val().length !== 0) {
+
+    var message = $("#player-msg").val().trim();
+    console.log(message);
+    chatRef.once("value", function () {
+      chatRef.push({
+        message: message
+      });
+    });
+    //remove user input after pushing into database
+    $("#player-msg").val("");
+  }
+});
+
+chatRef.on("child_added", function (snapshot) {
+  var message = $("<p>").html(snapshot.child("message").val());
+  $("#msg-display").prepend(message);
+});
 
 
 
