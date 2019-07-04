@@ -102,7 +102,7 @@ player1Ref.on("value", function (snapshot) {
 player2Ref.on("value", function (snapshot) {
   // when no player 2 or player 2 leaves the game
   if (snapshot.val() === null) {
-    $("#player2-name").html("<p>Waiting for Player 1 to join!</p>");
+    $("#player2-name").html("<p>Waiting for Player 2 to join!</p>");
     console.log("no player 2!");
   } else if (snapshot.val() !== null) {
     //when player 2 joins
@@ -122,7 +122,7 @@ playersRef.on("child_removed", function (snapshot) {
   });
 });
 
-//chat function
+//chat function --------------------------------------------------------
 $("#submit-msg").on("click", function (event) {
   event.preventDefault();
 
@@ -147,8 +147,8 @@ chatRef.on("child_added", function (snapshot) {
   $("#msg-display").prepend(message);
 });
 
+//display choices --------------------------------------------------------
 playersRef.on("value", function (snapshot) {
-
   var player1Name = snapshot.child("player1/playerName").val();
   var player2Name = snapshot.child("player2/playerName").val();
 
@@ -160,14 +160,22 @@ playersRef.on("value", function (snapshot) {
 
     if (player === snapshot.child("player1/playerName").val()) {
       //display choices for player 1
-      $("#player1-choices").html($("<button>Rock</button><button>Paper</button><button>Scissors</button>"));
-      $("#player2-choices").html($("<p>Waiting for " + player2Name + " to select!</p>"));
+      setTimeout(function () {
+        $("#player1-choices").html($("<button>Rock</button><button>Paper</button><button>Scissors</button>"));
+        $("#player2-choices").html($("<p>Waiting for " + player2Name + " to select!</p>"));
+        $("#game-message").html("It's your turn!");
+      }, 2000);
     } else if (player === snapshot.child("player2/playerName").val()) {
       //display choices for player 2
-      $("#player2-choices").html($("<button>Rock</button><button>Paper</button><button>Scissors</button>"));
-      $("#player1-choices").html($("<p>Waiting for " + player1Name + " to select!</p>"));
+      setTimeout(function () {
+        $("#player2-choices").html($("<button>Rock</button><button>Paper</button><button>Scissors</button>"));
+        $("#player1-choices").html($("<p>Waiting for " + player1Name + " to select!</p>"));
+        $("#game-message").html("It's your turn!");
+      }, 2000);
     }
   }
 });
+
+
 
 
