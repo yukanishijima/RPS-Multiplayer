@@ -21,8 +21,7 @@ var playersRef = db.ref("/players");
 var player1Ref = db.ref("/players/player1");
 var player2Ref = db.ref("/players/player2");
 var chatRef = db.ref("/chat");
-var player1 = false;
-var player2 = false;
+var playerNum = 0;
 
 
 //when someone clicks "start" button, display on his page
@@ -39,30 +38,37 @@ $("#submit-name").on("click", function (event) {
 
       // if player1 doesn't exist, assign as player 1
       if (!snapshot.child("player1").exists()) {
+        player1Ref.onDisconnect().remove();
         player1Ref.set({
-          player1Name: player,
-          player1Message: player + " joined the game!"
+          playerName: player,
+          wins: 0,
+          loses: 0
         });
-        player1 = true;
+        chatRef.push({
+          name: "admin",
+          message: player + " joined the game!"
+        });
         $("#game-message").html("Welcome " + player + "! You're Player 1!");
         $("#start").hide();
-        player1Ref.onDisconnect().remove();
 
         console.log(snapshot);
         console.log(snapshot.val()); //why null?
         console.log(snapshot.child("player1").val());  //why null?
-        // console.log(snapshot.child("player1").val().player1Name);  //why not working?
 
         //if player1 exists, assign as player 2
       } else if (!snapshot.child("player2").exists()) {
+        player2Ref.onDisconnect().remove();
         player2Ref.set({
-          player2Name: player,
-          player2Message: player + " joined the game!"
+          name: player,
+          wins: 0,
+          loses: 0
         });
-        player2 = true;
+        chatRef.push({
+          name: "admin",
+          message: player + " joined the game!"
+        });
         $("#game-message").html("Welcome " + player + "! You're Player 2!");
         $("#start").hide();
-        player2Ref.onDisconnect().remove();
 
         // if both player 1 and 2 exist, display the message
       } else {
@@ -83,26 +89,36 @@ player1Ref.on("value", function (snapshot) {
     console.log("no player 1!");
   } else if (snapshot.val() !== null) {
     //when player 1 joins
-    var name = snapshot.child("player1Name").val();
-    var msg = snapshot.child("player1Message").val();
+    var name = snapshot.child("name").val();
     $("#player1-name").html(name);
-    $("#msg-display").append("<p>" + msg + "</p>");
+    playerNum = 1;
   }
+}, function (errorObject) {
+  console.log("The read failed: " + errorObject.code);
 });
 
 // display player2's name on any page
 player2Ref.on("value", function (snapshot) {
-  // when no player 1 or player 1 leaves the game
+  // when no player 2 or player 2 leaves the game
   if (snapshot.val() === null) {
     $("#player2-name").html("<p>Waiting for Player 1 to join!</p>");
     console.log("no player 2!");
   } else if (snapshot.val() !== null) {
     //when player 2 joins
-    var name = snapshot.child("player2Name").val();
-    var msg = snapshot.child("player2Message").val();
+    var name = snapshot.child("name").val();
     $("#player2-name").html(name);
-    $("#msg-display").append("<p>" + msg + "</p>");
+    playerNum = 2;
   }
+}, function (errorObject) {
+  console.log("The read failed: " + errorObject.code);
+});
+
+//when player leaves the game
+playersRef.on("child_removed", function (snapshot) {
+  chatRef.push({
+    name: "admin",
+    message: snapshot.val().playerName + " has left the game!"
+  });
 });
 
 //chat function
@@ -112,11 +128,12 @@ $("#submit-msg").on("click", function (event) {
   //runs only when there's a value 
   if ($("#player-msg").val().length !== 0) {
 
-    var message = $("#player-msg").val().trim();
-    console.log(message);
+    console.log(player);
+
     chatRef.once("value", function () {
       chatRef.push({
-        message: message
+        name: player,
+        message: $("#player-msg").val().trim()
       });
     });
     //remove user input after pushing into database
@@ -128,7 +145,6 @@ chatRef.on("child_added", function (snapshot) {
   var message = $("<p>").html(snapshot.child("message").val());
   $("#msg-display").prepend(message);
 });
-
 
 
 
