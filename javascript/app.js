@@ -223,17 +223,49 @@ playersRef.on("value", function (snapshot) {
         });
       }, 2000);
     }
+
+    console.log($(".choice2").length);  //0
+    console.log($(".choice1").html());  //undefined
+
+    if (($(".choice1").length !== 0) && ($(".choice2").length !== 0)) {
+      console.log("Show the result!");
+      // showResult();
+    }
+
   }
+
 }, function (errorObject) {
   console.log("The read failed: " + errorObject.code);
 });
 
-// function showResult() {
-//   if (player1Ref.child("choice") === player2Ref.child("choice")) {
-//     console.log("Tie!");
-//   }
-// }
-// showeResult();
+//show result 
+function showResult() {
+  var snapshot1 = "";
+  var snapshot2 = "";
+
+  player1Ref.once("value", function (snapshot) {
+    // snapshot1 = snapshot.val().choice;
+    // snapshot1 = snapshot.child("choice").val();
+    snapshot1 = snapshot;
+  });
+
+  player2Ref.once("value", function (snapshot) {
+    snapshot2 = snapshot;
+  });
+
+  console.log(snapshot1);
+  console.log(snapshot2);
+  console.log(snapshot1.child("choice").exists());
+  console.log(snapshot1.val());
+  console.log(snapshot2.val());
+
+  if (snapshot1 === snapshot2) {
+    console.log("Tie!");
+    $("#game-message").html("Tie!");
+  } else {
+    console.log("Something else!");
+  }
+}
 
 
 
