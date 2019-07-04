@@ -21,7 +21,8 @@ var playersRef = db.ref("/players");
 var player1Ref = db.ref("/players/player1");
 var player2Ref = db.ref("/players/player2");
 var chatRef = db.ref("/chat");
-var playerNum = 0;
+var player1 = false;
+var player2 = false;
 
 
 //when someone clicks "start" button, display on his page
@@ -59,7 +60,7 @@ $("#submit-name").on("click", function (event) {
       } else if (!snapshot.child("player2").exists()) {
         player2Ref.onDisconnect().remove();
         player2Ref.set({
-          name: player,
+          playerName: player,
           wins: 0,
           loses: 0
         });
@@ -89,9 +90,9 @@ player1Ref.on("value", function (snapshot) {
     console.log("no player 1!");
   } else if (snapshot.val() !== null) {
     //when player 1 joins
-    var name = snapshot.child("name").val();
+    var name = snapshot.child("playerName").val();
     $("#player1-name").html(name);
-    playerNum = 1;
+    player1 = true;
   }
 }, function (errorObject) {
   console.log("The read failed: " + errorObject.code);
@@ -105,9 +106,9 @@ player2Ref.on("value", function (snapshot) {
     console.log("no player 2!");
   } else if (snapshot.val() !== null) {
     //when player 2 joins
-    var name = snapshot.child("name").val();
+    var name = snapshot.child("playerName").val();
     $("#player2-name").html(name);
-    playerNum = 2;
+    player2 = true;
   }
 }, function (errorObject) {
   console.log("The read failed: " + errorObject.code);
@@ -146,5 +147,27 @@ chatRef.on("child_added", function (snapshot) {
   $("#msg-display").prepend(message);
 });
 
+playersRef.on("value", function (snapshot) {
+
+  var player1Name = snapshot.child("player1/playerName").val();
+  var player2Name = snapshot.child("player2/playerName").val();
+
+  console.log(player);
+
+  //if both players are present
+  if (player1 && player2) {
+    console.log("Both players are ready for the game!");
+
+    if (player === snapshot.child("player1/playerName").val()) {
+      //display choices for player 1
+      $("#player1-choices").html($("<button>Rock</button><button>Paper</button><button>Scissors</button>"));
+      $("#player2-choices").html($("<p>Waiting for " + player2Name + " to select!</p>"));
+    } else if (player === snapshot.child("player2/playerName").val()) {
+      //display choices for player 2
+      $("#player2-choices").html($("<button>Rock</button><button>Paper</button><button>Scissors</button>"));
+      $("#player1-choices").html($("<p>Waiting for " + player1Name + " to select!</p>"));
+    }
+  }
+});
 
 
