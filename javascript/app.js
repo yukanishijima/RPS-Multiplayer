@@ -84,10 +84,12 @@ $("#submit-name").on("click", function (event) {
 
 // display player1's name on any page
 player1Ref.on("value", function (snapshot) {
-  // when no player 1 or player 1 leaves the game
+
+  // when no player 1 
   if (snapshot.val() === null) {
-    $("#player1-name").html("<p>Waiting for Player 1 to join!</p>");
     console.log("no player 1!");
+    $("#player1-name").html("<p>Waiting for Player 1 to join!</p>");
+    player1 = false;
   } else if (snapshot.val() !== null) {
     //when player 1 joins
     var name = snapshot.child("playerName").val();
@@ -100,10 +102,12 @@ player1Ref.on("value", function (snapshot) {
 
 // display player2's name on any page
 player2Ref.on("value", function (snapshot) {
-  // when no player 2 or player 2 leaves the game
+
+  // when no player 2
   if (snapshot.val() === null) {
-    $("#player2-name").html("<p>Waiting for Player 2 to join!</p>");
     console.log("no player 2!");
+    $("#player2-name").html("<p>Waiting for Player 2 to join!</p>");
+    player2 = false;
   } else if (snapshot.val() !== null) {
     //when player 2 joins
     var name = snapshot.child("playerName").val();
@@ -114,12 +118,16 @@ player2Ref.on("value", function (snapshot) {
   console.log("The read failed: " + errorObject.code);
 });
 
-//when player leaves the game
+//when player leaves the game --------------------------------------------
 playersRef.on("child_removed", function (snapshot) {
   chatRef.push({
     name: "admin",
     message: snapshot.val().playerName + " has left the game!"
   });
+  console.log("someone has left the game!");
+  $("#game-message").empty();
+  $("#player1-choices").empty();
+  $("#player2-choices").empty();
 });
 
 //chat function --------------------------------------------------------
@@ -164,17 +172,28 @@ playersRef.on("value", function (snapshot) {
         $("#player1-choices").html($("<button>Rock</button><button>Paper</button><button>Scissors</button>"));
         $("#player2-choices").html($("<p>Waiting for " + player2Name + " to select!</p>"));
         $("#game-message").html("It's your turn!");
+
+        $("button").on("click", function () {
+          $("#player1-choices").html("<p class='choice'>" + $(this).text() + "</p>");
+        });
       }, 2000);
+
     } else if (player === snapshot.child("player2/playerName").val()) {
       //display choices for player 2
       setTimeout(function () {
         $("#player2-choices").html($("<button>Rock</button><button>Paper</button><button>Scissors</button>"));
         $("#player1-choices").html($("<p>Waiting for " + player1Name + " to select!</p>"));
         $("#game-message").html("It's your turn!");
+
+        $("button").on("click", function () {
+          $("#player2-choices").html("<p class='choice'>" + $(this).text() + "</p>");
+        });
       }, 2000);
     }
   }
 });
+
+
 
 
 
