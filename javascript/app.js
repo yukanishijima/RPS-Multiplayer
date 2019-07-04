@@ -16,14 +16,13 @@ var db = firebase.database();
 
 //initial values
 var player = "";
-var connectedRef = db.ref(".info/connected");
+// var connectedRef = db.ref(".info/connected");
 var playersRef = db.ref("/players");
 var player1Ref = db.ref("/players/player1");
 var player2Ref = db.ref("/players/player2");
 var chatRef = db.ref("/chat");
 var player1 = false;
 var player2 = false;
-
 
 //when someone clicks "start" button, display on his page
 $("#submit-name").on("click", function (event) {
@@ -43,7 +42,7 @@ $("#submit-name").on("click", function (event) {
         player1Ref.set({
           playerName: player,
           wins: 0,
-          loses: 0
+          losses: 0
         });
         chatRef.push({
           name: "admin",
@@ -62,7 +61,7 @@ $("#submit-name").on("click", function (event) {
         player2Ref.set({
           playerName: player,
           wins: 0,
-          loses: 0
+          losses: 0
         });
         chatRef.push({
           name: "admin",
@@ -93,7 +92,11 @@ player1Ref.on("value", function (snapshot) {
   } else if (snapshot.val() !== null) {
     //when player 1 joins
     var name = snapshot.child("playerName").val();
+    var wins = snapshot.child("wins").val();
+    var losses = snapshot.child("losses").val();
+
     $("#player1-name").html(name);
+    $("#player1-score").append($("<p>wins: " + wins + "</p>")).append($("<p>losses: " + losses + "</p>"));
     player1 = true;
   }
 }, function (errorObject) {
@@ -111,7 +114,11 @@ player2Ref.on("value", function (snapshot) {
   } else if (snapshot.val() !== null) {
     //when player 2 joins
     var name = snapshot.child("playerName").val();
+    var wins = snapshot.child("wins").val();
+    var losses = snapshot.child("losses").val();
+
     $("#player2-name").html(name);
+    $("#player2-score").append($("<p>wins: " + wins + "</p>")).append($("<p>losses: " + losses + "</p>"));
     player2 = true;
   }
 }, function (errorObject) {
@@ -128,6 +135,8 @@ playersRef.on("child_removed", function (snapshot) {
   $("#game-message").empty();
   $("#player1-choices").empty();
   $("#player2-choices").empty();
+}, function (errorObject) {
+  console.log("The read failed: " + errorObject.code);
 });
 
 //chat function --------------------------------------------------------
@@ -153,6 +162,8 @@ $("#submit-msg").on("click", function (event) {
 chatRef.on("child_added", function (snapshot) {
   var message = $("<p>").html(snapshot.child("message").val());
   $("#msg-display").prepend(message);
+}, function (errorObject) {
+  console.log("The read failed: " + errorObject.code);
 });
 
 //display choices --------------------------------------------------------
@@ -166,34 +177,46 @@ playersRef.on("value", function (snapshot) {
   if (player1 && player2) {
     console.log("Both players are ready for the game!");
 
+    //display choices for player 1
     if (player === snapshot.child("player1/playerName").val()) {
-      //display choices for player 1
       setTimeout(function () {
         $("#player1-choices").html($("<button>Rock</button><button>Paper</button><button>Scissors</button>"));
         $("#player2-choices").html($("<p>Waiting for " + player2Name + " to select!</p>"));
         $("#game-message").html("It's your turn!");
 
         $("button").on("click", function () {
-          $("#player1-choices").html("<p class='choice'>" + $(this).text() + "</p>");
+          $("#player1-choices").html("<p class='choice1'>" + $(this).text() + "</p>");
+          player1Ref.update({
+            choice: $(this).text()
+          });
         });
       }, 2000);
 
-    } else if (player === snapshot.child("player2/playerName").val()) {
       //display choices for player 2
+    } else if (player === snapshot.child("player2/playerName").val()) {
       setTimeout(function () {
         $("#player2-choices").html($("<button>Rock</button><button>Paper</button><button>Scissors</button>"));
         $("#player1-choices").html($("<p>Waiting for " + player1Name + " to select!</p>"));
         $("#game-message").html("It's your turn!");
 
         $("button").on("click", function () {
-          $("#player2-choices").html("<p class='choice'>" + $(this).text() + "</p>");
+          $("#player2-choices").html("<p class='choice2'>" + $(this).text() + "</p>");
+          player2Ref.update({
+            choice: $(this).text()
+          });
         });
       }, 2000);
     }
   }
+}, function (errorObject) {
+  console.log("The read failed: " + errorObject.code);
 });
 
-
+// function result() {
+//   if (player1Choice === player2Choice) {
+//     console.log("Tie!");
+//   }
+// }
 
 
 
