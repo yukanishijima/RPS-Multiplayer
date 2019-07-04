@@ -223,15 +223,14 @@ playersRef.on("value", function (snapshot) {
         });
       }, 2000);
     }
+  }
 
-    console.log($(".choice2").length);  //0
-    console.log($(".choice1").html());  //undefined
+  console.log($(".choice2").length);  //1
+  console.log($(".choice1").length);  //1
 
-    if (($(".choice1").length !== 0) && ($(".choice2").length !== 0)) {
-      console.log("Show the result!");
-      // showResult();
-    }
-
+  if (($(".choice1").length === 1) && ($(".choice2").length === 1)) {
+    console.log("Show the result!");
+    // showResult();
   }
 
 }, function (errorObject) {
@@ -266,7 +265,6 @@ function showResult() {
     console.log("Something else!");
   }
 }
-
 
 
 
