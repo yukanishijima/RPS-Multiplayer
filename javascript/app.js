@@ -212,7 +212,7 @@ playersRef.on("value", function (snapshot) {
             choice: $(this).text()
           });
         });
-      }, 2000);
+      }, 1500);
 
       //display choices for player 2
     }
@@ -231,7 +231,7 @@ playersRef.on("value", function (snapshot) {
             choice: $(this).text()
           });
         });
-      }, 2000);
+      }, 1500);
     }
   }
 }, function (errorObject) {
@@ -255,9 +255,12 @@ db.ref("/players/player1/choice").on("value", function (snapshot) {
 
     //when both player select a choice
     if (player1Choice !== null && player2Choice !== null) {
-      $("#player1-choices").html("<p class='choice'>" + player1Choice + "</p>");
-      $("#player2-choices").html("<p class='choice'>" + player2Choice + "</p>");
-      showResult();
+
+      setTimeout(function () {
+        $("#player1-choices").html("<p class='choice'>" + player1Choice + "</p>");
+        $("#player2-choices").html("<p class='choice'>" + player2Choice + "</p>");
+        showResult();
+      }, 1500);
     }
   }, function (errorObject) {
     console.log("The read failed: " + errorObject.code);
