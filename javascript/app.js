@@ -55,8 +55,7 @@ $("#submit-name").on("click", function (event) {
         $("#start").hide();
 
         console.log(snapshot);
-        console.log(snapshot.val()); //why null?
-        console.log(snapshot.child("player1").val());  //why null?
+        console.log(snapshot.val()); // null?
 
         //if player1 exists, assign as player 2
       } else if (!snapshot.child("player2").exists()) {
@@ -132,6 +131,7 @@ player2Ref.on("value", function (snapshot) {
   console.log("The read failed: " + errorObject.code);
 });
 
+
 //when player leaves the game --------------------------------------------
 playersRef.on("child_removed", function (snapshot) {
   chatRef.push({
@@ -199,7 +199,7 @@ playersRef.on("value", function (snapshot) {
 
         $("button").on("click", function () {
           selected1 = true;
-          $("#player1-choices").html("<p class='choice1'>" + $(this).text() + "</p>");
+          $("#player1-choices").html("<p class='choice'>" + $(this).text() + "</p>");
           player1Ref.update({
             choice: $(this).text()
           });
@@ -207,7 +207,9 @@ playersRef.on("value", function (snapshot) {
       }, 2000);
 
       //display choices for player 2
-    } else if (player === player2Name) {
+    }
+
+    if (player === player2Name) {
 
       setTimeout(function () {
         $("#player2-choices").html($("<button>Rock</button><button>Paper</button><button>Scissors</button>"));
@@ -216,7 +218,7 @@ playersRef.on("value", function (snapshot) {
 
         $("button").on("click", function () {
           selected2 = true;
-          $("#player2-choices").html("<p class='choice2'>" + $(this).text() + "</p>");
+          $("#player2-choices").html("<p class='choice'>" + $(this).text() + "</p>");
           player2Ref.update({
             choice: $(this).text()
           });
@@ -224,46 +226,54 @@ playersRef.on("value", function (snapshot) {
       }, 2000);
     }
   }
-
-  console.log($(".choice2").length);  //1
-  console.log($(".choice1").length);  //1
-
-  if (($(".choice1").length === 1) && ($(".choice2").length === 1)) {
-    console.log("Show the result!");
-    // showResult();
-  }
-
 }, function (errorObject) {
   console.log("The read failed: " + errorObject.code);
 });
 
-//show result 
+//show result -------------------------------------------------------------
+var player1Choice;
+var player2Choice;
+var player1Wins;
+var player1Losses;
+var player2Wins;
+var player2Losses;
+
+playersRef.on("value", function (snapshot) {
+  player1Choice = snapshot.child("player1/choice").val();
+  player2Choice = snapshot.child("player2/choice").val();
+
+  //when both player select a choice
+  if (player1Choice !== null && player2Choice !== null) {
+    showResult();
+    console.log("let's see the result!");
+  }
+}, function (errorObject) {
+  console.log("The read failed: " + errorObject.code);
+});
+
 function showResult() {
-  var snapshot1 = "";
-  var snapshot2 = "";
+  console.log(player1Choice);
+  console.log(player2Choice);
 
-  player1Ref.once("value", function (snapshot) {
-    // snapshot1 = snapshot.val().choice;
-    // snapshot1 = snapshot.child("choice").val();
-    snapshot1 = snapshot;
-  });
-
-  player2Ref.once("value", function (snapshot) {
-    snapshot2 = snapshot;
-  });
-
-  console.log(snapshot1);
-  console.log(snapshot2);
-  console.log(snapshot1.child("choice").exists());
-  console.log(snapshot1.val());
-  console.log(snapshot2.val());
-
-  if (snapshot1 === snapshot2) {
+  if (player1Choice === player2Choice) {
     console.log("Tie!");
     $("#game-message").html("Tie!");
-  } else {
-    console.log("Something else!");
+  } else if (player1Choice === "Rock" && player2Choice === "Paper") {
+    $("#game-message").html("Player 2 won!");
+  } else if (player1Choice === "Rock" && player2Choice === "Scissors") {
+    $("#game-message").html("Player 1 won!");
+  } else if (player1Choice === "Paper" && player2Choice === "Rock") {
+    $("#game-message").html("Player 1 won!");
+  } else if (player1Choice === "Paper" && player2Choice === "Scissors") {
+    $("#game-message").html("Player 2 won!");
+  } else if (player1Choice === "Scissors" && player2Choice === "Rock") {
+    $("#game-message").html("Player 2 won!");
+  } else if (player1Choice === "Scissors" && player2Choice === "Paper") {
+    $("#game-message").html("Player 1 won!");
   }
+
+  $("#player1-choices").html("<p class='choice'>" + player1Choice + "</p>");
+  $("#player2-choices").html("<p class='choice'>" + player2Choice + "</p>");
 }
 
 
