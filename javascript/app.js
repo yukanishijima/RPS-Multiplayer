@@ -171,8 +171,16 @@ $("#submit-msg").on("click", function (event) {
 });
 
 chatRef.on("child_added", function (snapshot) {
-  var message = $("<p>").html(snapshot.child("message").val());
-  $("#msg-display").prepend(message);
+  //display chat message in the chat room
+  var chat = snapshot.child("message").val();
+  $("#msg-display").prepend($("<p>").html(chat));
+
+  //display result message at #game-message
+  var message = snapshot.child("gameMessage").val();
+  if (message !== null) {
+    $("#game-message").html(message);
+  }
+
 }, function (errorObject) {
   console.log("The read failed: " + errorObject.code);
 });
@@ -233,20 +241,28 @@ playersRef.on("value", function (snapshot) {
 //show result -------------------------------------------------------------
 var player1Choice;
 var player2Choice;
-var player1Wins;
-var player1Losses;
-var player2Wins;
-var player2Losses;
+var player1Wins = 0;
+var player1Losses = 0;
+var player2Wins = 0;
+var player2Losses = 0;
+var gameMessage;
 
-playersRef.on("value", function (snapshot) {
-  player1Choice = snapshot.child("player1/choice").val();
-  player2Choice = snapshot.child("player2/choice").val();
+db.ref("/players/player1/choice").on("value", function (snapshot) {
+  player1Choice = snapshot.val();
 
-  //when both player select a choice
-  if (player1Choice !== null && player2Choice !== null) {
-    showResult();
-    console.log("let's see the result!");
-  }
+  db.ref("/players/player2/choice").on("value", function (snapshot) {
+    player2Choice = snapshot.val();
+
+    //when both player select a choice
+    if (player1Choice !== null && player2Choice !== null) {
+      $("#player1-choices").html("<p class='choice'>" + player1Choice + "</p>");
+      $("#player2-choices").html("<p class='choice'>" + player2Choice + "</p>");
+      showResult();
+    }
+  }, function (errorObject) {
+    console.log("The read failed: " + errorObject.code);
+  });
+
 }, function (errorObject) {
   console.log("The read failed: " + errorObject.code);
 });
@@ -257,23 +273,48 @@ function showResult() {
 
   if (player1Choice === player2Choice) {
     console.log("Tie!");
-    $("#game-message").html("Tie!");
+    gameMessage = "Tie!";
   } else if (player1Choice === "Rock" && player2Choice === "Paper") {
-    $("#game-message").html("Player 2 won!");
+    gameMessage = "Player 2 won!";
+    player1Losses++;
+    player2Wins++;
   } else if (player1Choice === "Rock" && player2Choice === "Scissors") {
-    $("#game-message").html("Player 1 won!");
+    gameMessage = "Player 1 won!";
+    player2Losses++;
+    player1Wins++;
   } else if (player1Choice === "Paper" && player2Choice === "Rock") {
-    $("#game-message").html("Player 1 won!");
+    gameMessage = "Player 1 won!";
+    player2Losses++;
+    player1Wins++;
   } else if (player1Choice === "Paper" && player2Choice === "Scissors") {
-    $("#game-message").html("Player 2 won!");
+    gameMessage = "Player 2 won!";
+    player1Losses++;
+    player2Wins++;
   } else if (player1Choice === "Scissors" && player2Choice === "Rock") {
-    $("#game-message").html("Player 2 won!");
+    gameMessage = "Player 2 won!";
+    player1Losses++;
+    player2Wins++;
   } else if (player1Choice === "Scissors" && player2Choice === "Paper") {
-    $("#game-message").html("Player 1 won!");
+    gameMessage = "Player 1 won!";
+    player2Losses++;
+    player1Wins++;
   }
 
-  $("#player1-choices").html("<p class='choice'>" + player1Choice + "</p>");
-  $("#player2-choices").html("<p class='choice'>" + player2Choice + "</p>");
+  console.log(player1Wins);
+  console.log(player2Wins);
+
+  chatRef.push({
+    gameMessage: gameMessage
+  });
+  player1Ref.update({
+    wins: player1Wins,
+    losses: player1Losses
+  });
+  player2Ref.update({
+    wins: player2Wins,
+    losses: player2Losses
+  });
+
 }
 
 
