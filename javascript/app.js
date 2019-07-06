@@ -49,9 +49,9 @@ $("#submit-name").on("click", function (event) {
         });
         chatRef.push({
           name: "admin",
-          message: player + " joined the game!"
+          chat: player + " joined the game!"
         });
-        $("#game-message").html("Welcome " + player + "! You're Player 1!");
+        $("#game-message").html("<p>Welcome " + player + "! You're Player 1!</p>");
         $("#start").hide();
 
         console.log(snapshot);
@@ -67,9 +67,9 @@ $("#submit-name").on("click", function (event) {
         });
         chatRef.push({
           name: "admin",
-          message: player + " joined the game!"
+          chat: player + " joined the game!"
         });
-        $("#game-message").html("Welcome " + player + "! You're Player 2!");
+        $("#game-message").html("<p>Welcome " + player + "! You're Player 2!</p>");
         $("#start").hide();
 
         // if both player 1 and 2 exist, display the message
@@ -89,7 +89,7 @@ player1Ref.on("value", function (snapshot) {
   // when no player 1 
   if (snapshot.val() === null) {
     console.log("no player 1!");
-    $("#player1-name").html("<p>Waiting for Player 1 to join!</p>");
+    $("#player1-choices").html("<p>Waiting for Player 1 to join!</p>");
     $("#player1-score").empty();
     player1 = false;
 
@@ -100,6 +100,7 @@ player1Ref.on("value", function (snapshot) {
     var losses = snapshot.child("losses").val();
 
     $("#player1-name").html(name);
+    $("#player1-choices").empty();
     $("#player1-score").html($("<p>wins: " + wins + "</p>")).append($("<p>losses: " + losses + "</p>"));
     player1 = true;
   }
@@ -113,7 +114,7 @@ player2Ref.on("value", function (snapshot) {
   // when no player 2
   if (snapshot.val() === null) {
     console.log("no player 2!");
-    $("#player2-name").html("<p>Waiting for Player 2 to join!</p>");
+    $("#player2-choices").html("<p>Waiting for Player 2 to join!</p>");
     $("#player2-score").empty();
     player2 = false;
 
@@ -124,6 +125,7 @@ player2Ref.on("value", function (snapshot) {
     var losses = snapshot.child("losses").val();
 
     $("#player2-name").html(name);
+    $("#player2-choices").empty();
     $("#player2-score").html($("<p>wins: " + wins + "</p>")).append($("<p>losses: " + losses + "</p>"));
     player2 = true;
   }
@@ -136,7 +138,7 @@ player2Ref.on("value", function (snapshot) {
 playersRef.on("child_removed", function (snapshot) {
   chatRef.push({
     name: "admin",
-    message: snapshot.val().playerName + " has left the game!"
+    chat: snapshot.val().playerName + " has left the game!"
   });
   console.log("someone has left the game!");
   $("#game-message").empty();
@@ -144,6 +146,9 @@ playersRef.on("child_removed", function (snapshot) {
   $("#player2-choices").empty();
   selected1 = false;
   selected2 = false;
+  chatRef.set({
+    gameMessage: null
+  });
 
 }, function (errorObject) {
   console.log("The read failed: " + errorObject.code);
@@ -162,7 +167,7 @@ $("#submit-msg").on("click", function (event) {
     chatRef.once("value", function () {
       chatRef.push({
         name: player,
-        message: $("#player-msg").val().trim()
+        chat: $("#player-msg").val().trim()
       });
     });
     //remove user input after pushing into database
@@ -172,15 +177,16 @@ $("#submit-msg").on("click", function (event) {
 
 chatRef.on("child_added", function (snapshot) {
   //display chat message in the chat room
-  var chat = snapshot.child("message").val();
+  var chat = snapshot.child("chat").val();
   $("#msg-display").prepend($("<p>").html(chat));
 
   //display result message at #game-message
   var message = snapshot.child("gameMessage").val();
   if (message !== null) {
     $("#game-message").html(message);
+    $("#player1-name").append("<button id='reset1'>Play again!</button>");  //need to fix
+    $("#player2-name").append("<button id='reset2'>Play again!</button>");  //need to fix
   }
-
 }, function (errorObject) {
   console.log("The read failed: " + errorObject.code);
 });
@@ -317,8 +323,21 @@ function showResult() {
     wins: player2Wins,
     losses: player2Losses
   });
-
 }
+
+$(document.body).on("click", "#reset1", function () {
+  selected1 = false;
+  player1Ref.update({
+    choice: null
+  });
+});
+
+$(document.body).on("click", "#reset2", function () {
+  selected2 = false;
+  player2Ref.update({
+    choice: null
+  });
+});
 
 
 
