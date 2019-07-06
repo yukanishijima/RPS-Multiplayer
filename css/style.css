@@ -101,8 +101,95 @@ input, select {
     vertical-align:middle;
 }
 
+/* global style
+------------------------------------------ */
+*, *:before, *:after {
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box
+}
+.my-body {
+  background-color: rgba(11, 22, 47, 0.9);
+  color: rgb(165, 150, 45);
+  text-align: center;
+  margin: 5px;
+}
+.my-body, header, #game-message, #player1, #player2, #chat {
+  border: 1px solid;
+}
+
+
+
+/* header style
+------------------------------------------ */
+.my-h1 {
+  font-family: 'Playfair Display', serif;
+  font-weight: 600;
+  font-size: 27px;
+}
+
+
+/* game style
+------------------------------------------ */
 #player1, #player2 {
-  border: 1px solid black;
-  width: 90vw;
   height: 200px;
+}
+#player1 p, #player2 p {
+  font-family: 'Quicksand', sans-serif;
+}
+#player1-name, #player2-name {
+  font-family: 'Playfair Display', serif;
+  font-weight: 600;
+  font-size: 25px;
+}
+#player1-name p, #player2-name p {
+  font-family: 'Quicksand', sans-serif;
+  font-size: 16px;
+} 
+#game-message p {
+  /* font-family: 'Playfair Display', serif; */
+  font-family: 'Italiana', serif;
+  height: 40px;
+  margin: 0;
+  font-size: 22px;
+  color: rgb(183, 80, 80);
+  font-style: italic;
+}
+.my-border {
+  border-bottom: 1px dotted;
+}
+
+
+/* chat room style
+------------------------------------------ */
+#chat {
+  height: 300px;
+}
+
+/* height for big screen
+------------------------------------------ */
+@media screen and (min-width: 576px) {
+  .my-body {
+    margin: 1vh;
+  }
+  .my-body, header, #game-message, #player1, #player2, #chat {
+    border: 0.1vh solid;
+  }
+  header {
+    height: 17vh;
+  }
+  #game-message {
+    height: 9vh;
+  }
+  #player1, #player2 {
+    height: 40vh;
+  }
+  #chat {
+    height: 32vh;
+  }
+}
+@media screen and (min-width: 768px) {
+  .my-body {
+    max-width: 768px;
+    margin: 1vh auto;
+  }
 }
