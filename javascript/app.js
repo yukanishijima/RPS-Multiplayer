@@ -244,7 +244,7 @@ playersRef.on("value", function (snapshot) {
             choice: $(this).text()
           });
         });
-      }, 1500);
+      }, 1000);
     }
 
     //display choices for player 2
@@ -263,7 +263,7 @@ playersRef.on("value", function (snapshot) {
             choice: $(this).text()
           });
         });
-      }, 1500);
+      }, 1000);
     }
   }
 }, function (errorObject) {
@@ -359,6 +359,7 @@ function showResult() {
 }
 
 $(document.body).on("click", "#reset", function () {
+  $(this).hide();
   player1Ref.update({
     choice: null
   });
@@ -366,8 +367,3 @@ $(document.body).on("click", "#reset", function () {
     choice: null
   });
 });
-
-
-
-
-
