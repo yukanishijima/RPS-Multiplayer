@@ -21,8 +21,8 @@ var playersRef = db.ref("/players");
 var player1Ref = db.ref("/players/player1");
 var player2Ref = db.ref("/players/player2");
 var chatRef = db.ref("/chat");
-var player1 = false;
-var player2 = false;
+// var player1 = false;
+// var player2 = false;
 
 //when someone clicks "start" button, display on his page
 $("#submit-name").on("click", function (event) {
@@ -87,7 +87,7 @@ player1Ref.on("value", function (snapshot) {
     $("#player1-name").html("<p>player1</p>");
     $("#player1-message").html("<p>Waiting for Player 1 to join!</p>");
     $("#player1-score").empty();
-    player1 = false;
+    // player1 = false;
 
     //when player 1 joins
   } else if (snapshot.val() !== null) {
@@ -97,8 +97,8 @@ player1Ref.on("value", function (snapshot) {
 
     $("#player1-name").html(name);
     $("#player1-message").empty();
-    $("#player1-score").html($("<p>wins: " + wins + "</p>")).append($("<p>losses: " + losses + "</p>"));
-    player1 = true;
+    $("#player1-score").html($("<div class='row'><p class='col-6'>wins: " + wins + "</p><p class='col-6'>losses: " + losses + "</p></div>"));
+    // player1 = true;
   }
 }, function (errorObject) {
   console.log("The read failed: " + errorObject.code);
@@ -113,7 +113,7 @@ player2Ref.on("value", function (snapshot) {
     $("#player2-name").html("<p>player2</p>");
     $("#player2-message").html("<p>Waiting for Player 2 to join!</p>");
     $("#player2-score").empty();
-    player2 = false;
+    // player2 = false;
 
     //when player 2 joins
   } else if (snapshot.val() !== null) {
@@ -123,8 +123,8 @@ player2Ref.on("value", function (snapshot) {
 
     $("#player2-name").html(name);
     $("#player2-message").empty();
-    $("#player2-score").html($("<p>wins: " + wins + "</p>")).append($("<p>losses: " + losses + "</p>"));
-    player2 = true;
+    $("#player2-score").html($("<div class='row'><p class='col-6'>wins: " + wins + "</p><p class='col-6'>losses: " + losses + "</p></div>"));
+    // player2 = true;
   }
 }, function (errorObject) {
   console.log("The read failed: " + errorObject.code);
@@ -197,7 +197,8 @@ playersRef.on("value", function (snapshot) {
   console.log(!player1Selected, !player2Selected);
 
   //if both players are present
-  if (player1 && player2 && !player1Selected && !player2Selected) {    //test
+  // if (player1 && player2 && !player1Selected && !player2Selected) {    //test
+  if (player1Name && player2Name && !player1Selected && !player2Selected) {
     console.log("Both players are ready for the game!");
     console.log(player);
 
@@ -207,6 +208,7 @@ playersRef.on("value", function (snapshot) {
       setTimeout(function () {
         $("#player1-choices").html($("<button>Rock</button><button>Paper</button><button>Scissors</button>"));
         $("#player2-message").html($("<p>Waiting for " + player2Name + " to select!</p>"));
+        $("#player2-choices").empty();
         $("#game-message").html("It's your turn!");
 
         $("button").on("click", function () {
@@ -225,6 +227,7 @@ playersRef.on("value", function (snapshot) {
       setTimeout(function () {
         $("#player2-choices").html($("<button>Rock</button><button>Paper</button><button>Scissors</button>"));
         $("#player1-message").html($("<p>Waiting for " + player1Name + " to select!</p>"));
+        $("#player1-choices").empty();
         $("#game-message").html("It's your turn!");
 
         $("button").on("click", function () {
@@ -326,8 +329,6 @@ function showResult() {
 }
 
 $(document.body).on("click", "#reset", function () {
-  $("#player1-choices").empty();
-  $("#player2-choices").empty();
   player1Ref.update({
     selected1: false,
     choice: null
