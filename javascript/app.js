@@ -21,8 +21,8 @@ var playersRef = db.ref("/players");
 var player1Ref = db.ref("/players/player1");
 var player2Ref = db.ref("/players/player2");
 var chatRef = db.ref("/chat");
-var player1 = false;  //test
-var player2 = false;  //test
+var player1 = false;
+var player2 = false;
 
 //when someone clicks "start" button, display on his page
 $("#submit-name").on("click", function (event) {
@@ -49,7 +49,7 @@ $("#submit-name").on("click", function (event) {
           chat: player + " joined the game!"
         });
         $("#game-message").html("<p>Welcome " + player + "! You're Player 1!</p>");
-        player1 = true;  //test
+        player1 = true;
 
         console.log(snapshot);
         console.log(snapshot.val()); // null?
@@ -68,7 +68,6 @@ $("#submit-name").on("click", function (event) {
         });
         $("#game-message").html("<p>Welcome " + player + "! You're Player 2!</p>");
         player2 = true;
-
 
         // if both player 1 and 2 exist, display the message
       } else {
@@ -178,9 +177,19 @@ $("#submit-msg").on("click", function (event) {
 
     chatRef.once("value", function () {
       chatRef.push({
-        name: player,
         chat: $("#player-msg").val().trim()
       });
+
+      if (player === "") {
+        chatRef.push({
+          name: "anonymous",
+        });
+      } else {
+        chatRef.push({
+          name: player,
+        });
+      }
+
     });
     //remove user input after pushing into database
     $("#player-msg").val("");
@@ -190,7 +199,8 @@ $("#submit-msg").on("click", function (event) {
 chatRef.on("child_added", function (snapshot) {
   //display chat message in the chat room
   var chat = snapshot.child("chat").val();
-  $("#msg-display").prepend($("<p>").html(chat));
+  var who = snapshot.child("name").val();
+  $("#msg-display").prepend($("<p>").html(who + " : " + chat));
 
   // display result message at #game-message
   var message = snapshot.child("gameMessage").val();
