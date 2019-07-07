@@ -141,6 +141,7 @@ input, select {
 }
 #player1, #player2 {
   height: 200px;
+  position: relative; 
 }
 #player1 p, #player2 p {
   font-family: 'Quicksand', sans-serif;
@@ -165,6 +166,10 @@ input, select {
 .my-border {
   border-bottom: 1px dotted;
   height: 40px;
+}
+#player1-score, #player2-score {
+  position: absolute;
+  bottom: 0;
 }
 
 /* chat room style
