@@ -24,9 +24,6 @@ var chatRef = db.ref("/chat");
 var player1 = false;
 var player2 = false;
 
-var selected1 = false;
-var selected2 = false;
-
 //when someone clicks "start" button, display on his page
 $("#submit-name").on("click", function (event) {
   event.preventDefault();
@@ -145,8 +142,6 @@ playersRef.on("child_removed", function (snapshot) {
   $("#game-message").html(start);
   $("#player1-choices").empty();
   $("#player2-choices").empty();
-  selected1 = false;
-  selected2 = false;
   chatRef.set({
     gameMessage: null
   });
@@ -181,7 +176,7 @@ chatRef.on("child_added", function (snapshot) {
   var chat = snapshot.child("chat").val();
   $("#msg-display").prepend($("<p>").html(chat));
 
-  //display result message at #game-message
+  // display result message at #game-message
   var message = snapshot.child("gameMessage").val();
   if (message !== null) {
     $("#game-message").html(message).append("<button id='reset'>Play again!</button>");
@@ -195,12 +190,16 @@ playersRef.on("value", function (snapshot) {
   var player1Name = snapshot.child("player1/playerName").val();
   var player2Name = snapshot.child("player2/playerName").val();
 
+  var player1Selected = snapshot.child("player1/selected1").val();   //test
+  var player2Selected = snapshot.child("player2/selected2").val();   //test
+
+  console.log(player1Selected, player2Selected);
+  console.log(!player1Selected, !player2Selected);
+
   //if both players are present
-  if (player1 && player2 && !selected1 && !selected2) {
+  if (player1 && player2 && !player1Selected && !player2Selected) {    //test
     console.log("Both players are ready for the game!");
     console.log(player);
-    console.log("player1Name: " + player1Name);
-    console.log("player2Name: " + player2Name);
 
     //display choices for player 1
     if (player === player1Name) {
@@ -211,9 +210,9 @@ playersRef.on("value", function (snapshot) {
         $("#game-message").html("It's your turn!");
 
         $("button").on("click", function () {
-          selected1 = true;
           $("#player1-choices").html("<p class='choice'>" + $(this).text() + "</p>");
           player1Ref.update({
+            selected1: true,
             choice: $(this).text()
           });
         });
@@ -229,10 +228,10 @@ playersRef.on("value", function (snapshot) {
         $("#game-message").html("It's your turn!");
 
         $("button").on("click", function () {
-          selected2 = true;
           console.log("button clicked!");
           $("#player2-choices").html("<p class='choice'>" + $(this).text() + "</p>");
           player2Ref.update({
+            selected2: true,
             choice: $(this).text()
           });
         });
@@ -318,23 +317,23 @@ function showResult() {
   });
   player1Ref.update({
     wins: player1Wins,
-    losses: player1Losses
+    losses: player1Losses,
   });
   player2Ref.update({
     wins: player2Wins,
-    losses: player2Losses
+    losses: player2Losses,
   });
 }
 
 $(document.body).on("click", "#reset", function () {
-  selected1 = false;
-  selected2 = false;
   $("#player1-choices").empty();
   $("#player2-choices").empty();
   player1Ref.update({
+    selected1: false,
     choice: null
   });
   player2Ref.update({
+    selected2: false,
     choice: null
   });
 });
