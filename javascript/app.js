@@ -23,6 +23,10 @@ var player2Ref = db.ref("/players/player2");
 var chatRef = db.ref("/chat");
 var player1 = false;
 var player2 = false;
+var player1Wins = 0;
+var player1Losses = 0;
+var player2Wins = 0;
+var player2Losses = 0;
 
 //when someone clicks "start" button, display on his page
 $("#submit-name").on("click", function (event) {
@@ -148,15 +152,25 @@ playersRef.on("child_removed", function (snapshot) {
   $("#player1-choices").empty();
   $("#player2-choices").empty();
 
+  player1Wins = 0;
+  player1Losses = 0;
+  player2Wins = 0;
+  player2Losses = 0;
+
   //when either player leaves after selecting choice, reset the choice of the remaining player
   if (!player1 && player2) {
     player2Ref.update({
       selected2: false,
-      choice: null
+      choice: null,
+      wins: 0,
+      losses: 0
     });
   } else if (!player2 && player1) {
     player1Ref.update({
-      selected1: false
+      selected1: false,
+      choice: null,
+      wins: 0,
+      losses: 0
     });
   }
 
@@ -273,10 +287,6 @@ playersRef.on("value", function (snapshot) {
 //show result -------------------------------------------------------------
 var player1Choice;
 var player2Choice;
-var player1Wins = 0;
-var player1Losses = 0;
-var player2Wins = 0;
-var player2Losses = 0;
 var gameMessage;
 
 playersRef.on("value", function (snapshot) {
