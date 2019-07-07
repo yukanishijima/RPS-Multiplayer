@@ -24,75 +24,80 @@
 
 <body class="my-body">
 
-  <header class="container-fluid">
-    <div class="row align-items-center">
-      <h1 class="col-12 my-h1">
-        <div class="row align-items-center justify-content-center">
-          <div class="col-12">Rock</div>
-          <div class="col-12">Paper</div>
-          <div class="col-12">Scissors</div>
-        </div>
-      </h1>
-    </div>
-  </header>
+  <div class="wrap">
 
-  <main>
-    <div class="container-fluid">
+    <header class="container-fluid">
+      <div class="row align-items-center justify-content-center">
+        <h1 class="col-12 my-h1">
+          <div class="row align-items-center justify-content-center">
+            <div class="col-12 col-md-auto">Rock</div>
+            <div class="col-12 col-md-auto">Paper</div>
+            <div class="col-12 col-md-auto">Scissors</div>
+          </div>
+        </h1>
+      </div>
+    </header>
 
-      <section id="game">
+    <main>
+      <div class="container-fluid">
 
-        <div id="game-message" class="row align-items-center justify-content-center">
+        <section id="game">
 
-          <form id="start" class="col-12">
-            <input id="player-name" type="text" placeholder="Type your name">
-            <input id="submit-name" type="submit" value="Start">
-          </form>
+          <div id="game-message" class="row align-items-center justify-content-center">
 
-        </div>
+            <form id="start" class="col-12">
+              <input id="player-name" type="text" placeholder="Type your name">
+              <input id="submit-name" type="submit" value="Start">
+            </form>
 
-        <div class="row justify-content-center">
+          </div>
 
-          <div id="player1" class="col-xs-12 col-sm-6">
+          <div class="row justify-content-center">
 
-            <div class="row my-border">
-              <div id="player1-name" class="col-12">player 1</div>
+            <div id="player1" class="col-xs-12 col-sm-6">
+
+              <div class="row my-border">
+                <div id="player1-name" class="col-12">player 1</div>
+              </div>
+              <div id="player1-message" class="col-12"></div>
+              <div id="player1-choices" class="col-12"></div>
+              <div id="player1-score" class="col-12"></div>
+
             </div>
-            <div id="player1-message" class="col-12"></div>
-            <div id="player1-choices" class="col-12"></div>
-            <div id="player1-score" class="col-12"></div>
+            <!--end of #player1-->
 
-          </div>
-          <!--end of #player1-->
+            <div id="player2" class="col-xs-12 col-sm-6">
 
-          <div id="player2" class="col-xs-12 col-sm-6">
+              <div class="row my-border">
+                <div id="player2-name" class="col-12">player 2</div>
+              </div>
+              <div id="player2-message" class="col-12"></div>
+              <div id="player2-choices" class="col-12"></div>
+              <div id="player2-score" class="col-12"></div>
 
-            <div class="row my-border">
-              <div id="player2-name" class="col-12">player 2</div>
             </div>
-            <div id="player2-message" class="col-12"></div>
-            <div id="player2-choices" class="col-12"></div>
-            <div id="player2-score" class="col-12"></div>
+            <!--end of #player2-->
 
           </div>
-          <!--end of #player2-->
+          <!--end of .row-->
 
-        </div>
-        <!--end of .row-->
-
-        <div id="chat" class="row justify-content-center">
-          <div class="col-12">
-            <input id="player-msg" type="text" placeholder="">
-            <input id="submit-msg" type="submit" value="Send">
-            <div id="msg-display"></div>
+          <div id="chat" class="row justify-content-center">
+            <div class="col-12">
+              <input id="player-msg" type="text" placeholder="">
+              <input id="submit-msg" type="submit" value="Send">
+              <div id="msg-display"></div>
+            </div>
           </div>
-        </div>
-        <!--end of .row-->
+          <!--end of .row-->
 
-      </section>
+        </section>
 
-    </div>
-    <!--end of .container-fluid-->
-  </main>
+      </div>
+      <!--end of .container-fluid-->
+    </main>
+
+  </div>
+  <!--end of .wrap-->
 
   <!--Javascript-->
   <script src="javascript/app.js"></script>

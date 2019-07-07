@@ -108,13 +108,18 @@ input, select {
   box-sizing: border-box
 }
 .my-body {
-  background-color: rgba(11, 22, 47, 0.9);
-  color: rgb(165, 150, 45);
-  text-align: center;
-  margin: 5px;
+  background-image: url(../images/KS001.JPG);
+  background-size: cover;
 }
-.my-body, header, #game-message, #player1, #player2, #chat {
-  border: 1px solid;
+
+.wrap {
+  background-color: rgba(10, 20, 30, 0.8);
+  color: rgba(190, 165, 0, 1);
+  text-align: center;
+  margin: 7px;
+}
+.wrap, header, #game-message, #player1, #player2, #chat {
+  border: 2px solid;
 }
 
 
@@ -150,7 +155,7 @@ input, select {
   height: 40px;
   margin: 0;
   font-size: 22px;
-  color: rgb(183, 80, 80);
+  color: rgba(185, 185, 150, 1);
   font-style: italic;
 }
 .my-border {
@@ -168,11 +173,11 @@ input, select {
 /* height for big screen
 ------------------------------------------ */
 @media screen and (min-width: 576px) {
-  .my-body {
+  .wrap {
     margin: 1vh;
   }
-  .my-body, header, #game-message, #player1, #player2, #chat {
-    border: 0.1vh solid;
+  .wrap, header, #game-message, #player1, #player2, #chat {
+    border: 0.3vh solid;
   }
   header {
     height: 17vh;
@@ -188,9 +193,16 @@ input, select {
     height: 32vh;
   }
 }
+
+/* for big screen
+------------------------------------------ */
 @media screen and (min-width: 768px) {
-  .my-body {
+  .wrap {
     max-width: 768px;
     margin: 1vh auto;
+  }
+  .my-h1 {
+    font-size: 55px;
+    margin-top: 10px;
   }
 }

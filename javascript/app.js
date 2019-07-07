@@ -86,7 +86,7 @@ player1Ref.on("value", function (snapshot) {
   // when no player 1 
   if (snapshot.val() === null) {
     console.log("no player 1!");
-    $("#player1-name").html("<p>player1</p>");
+    $("#player1-name").html("Player 1");
     $("#player1-message").html("<p>Waiting for Player 1 to join!</p>");
     $("#player1-score").empty();
     player1 = false;
@@ -112,7 +112,7 @@ player2Ref.on("value", function (snapshot) {
   // when no player 2
   if (snapshot.val() === null) {
     console.log("no player 2!");
-    $("#player2-name").html("<p>player2</p>");
+    $("#player2-name").html("Player 2");
     $("#player2-message").html("<p>Waiting for Player 2 to join!</p>");
     $("#player2-score").empty();
     player2 = false;
