@@ -217,12 +217,14 @@ playersRef.on("value", function (snapshot) {
   var player2Name = snapshot.child("player2/playerName").val();
   var player1Selected = snapshot.child("player1/selected1").val();
   var player2Selected = snapshot.child("player2/selected2").val();
+  var player1Choice = snapshot.child("player1/choice").val();
+  var player2Choice = snapshot.child("player2/choice").val();
 
   console.log(player1Selected, player2Selected);
   console.log(!player1Selected, !player2Selected);
 
   //if both players are present
-  if (player1 && player2 && !player1Selected && !player2Selected) {
+  if (player1 && player2 && !player1Selected && !player2Selected && !player1Choice && !player2Choice) {
     console.log("Both players are ready for the game!");
     console.log(player);
 
@@ -277,30 +279,33 @@ var player2Wins = 0;
 var player2Losses = 0;
 var gameMessage;
 
-db.ref("/players/player1/choice").on("value", function (snapshot) {
-  player1Choice = snapshot.val();
-
-  db.ref("/players/player2/choice").on("value", function (snapshot) {
-    player2Choice = snapshot.val();
-
-    //when both player select a choice
-    if (player1Choice !== null && player2Choice !== null) {
-
-      setTimeout(function () {
-        $("#player1-message").empty();
-        $("#player2-message").empty();
-        $("#player1-choices").html("<p class='choice'>" + player1Choice + "</p>");
-        $("#player2-choices").html("<p class='choice'>" + player2Choice + "</p>");
-        showResult();
-      }, 1500);
-    }
-  }, function (errorObject) {
-    console.log("The read failed: " + errorObject.code);
+playersRef.on("value", function (snapshot) {
+  db.ref("/players/player1/choice").once("value", function (snapshot) {
+    player1Choice = snapshot.val();
   });
+  db.ref("/players/player2/choice").once("value", function (snapshot) {
+    player2Choice = snapshot.val();
+  });
+
+  var player1Selected = snapshot.child("player1/selected1").val();
+  var player2Selected = snapshot.child("player2/selected2").val();
+
+  //when both player select a choice
+  if (player1Choice !== null && player2Choice !== null && player1Selected && player2Selected) {
+
+    setTimeout(function () {
+      $("#player1-message").empty();
+      $("#player2-message").empty();
+      $("#player1-choices").html("<p class='choice'>" + player1Choice + "</p>");
+      $("#player2-choices").html("<p class='choice'>" + player2Choice + "</p>");
+      showResult();
+    }, 1500);
+  }
 
 }, function (errorObject) {
   console.log("The read failed: " + errorObject.code);
 });
+
 
 function showResult() {
   console.log(player1Choice);
@@ -344,20 +349,20 @@ function showResult() {
   player1Ref.update({
     wins: player1Wins,
     losses: player1Losses,
+    selected1: false
   });
   player2Ref.update({
     wins: player2Wins,
     losses: player2Losses,
+    selected2: false
   });
 }
 
 $(document.body).on("click", "#reset", function () {
   player1Ref.update({
-    selected1: false,
     choice: null
   });
   player2Ref.update({
-    selected2: false,
     choice: null
   });
 });
