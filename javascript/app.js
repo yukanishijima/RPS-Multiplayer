@@ -52,7 +52,6 @@ $("#submit-name").on("click", function (event) {
           chat: player + " joined the game!"
         });
         $("#game-message").html("<p>Welcome " + player + "! You're Player 1!</p>");
-        $("#start").hide();
 
         console.log(snapshot);
         console.log(snapshot.val()); // null?
@@ -70,7 +69,6 @@ $("#submit-name").on("click", function (event) {
           chat: player + " joined the game!"
         });
         $("#game-message").html("<p>Welcome " + player + "! You're Player 2!</p>");
-        $("#start").hide();
 
         // if both player 1 and 2 exist, display the message
       } else {
@@ -89,7 +87,8 @@ player1Ref.on("value", function (snapshot) {
   // when no player 1 
   if (snapshot.val() === null) {
     console.log("no player 1!");
-    $("#player1-choices").html("<p>Waiting for Player 1 to join!</p>");
+    $("#player1-name").html("<p>player1</p>");
+    $("#player1-message").html("<p>Waiting for Player 1 to join!</p>");
     $("#player1-score").empty();
     player1 = false;
 
@@ -100,6 +99,7 @@ player1Ref.on("value", function (snapshot) {
     var losses = snapshot.child("losses").val();
 
     $("#player1-name").html(name);
+    $("#player1-message").empty();
     $("#player1-choices").empty();
     $("#player1-score").html($("<p>wins: " + wins + "</p>")).append($("<p>losses: " + losses + "</p>"));
     player1 = true;
@@ -114,7 +114,8 @@ player2Ref.on("value", function (snapshot) {
   // when no player 2
   if (snapshot.val() === null) {
     console.log("no player 2!");
-    $("#player2-choices").html("<p>Waiting for Player 2 to join!</p>");
+    $("#player2-name").html("<p>player2</p>");
+    $("#player2-message").html("<p>Waiting for Player 2 to join!</p>");
     $("#player2-score").empty();
     player2 = false;
 
@@ -125,6 +126,7 @@ player2Ref.on("value", function (snapshot) {
     var losses = snapshot.child("losses").val();
 
     $("#player2-name").html(name);
+    $("#player2-message").empty();
     $("#player2-choices").empty();
     $("#player2-score").html($("<p>wins: " + wins + "</p>")).append($("<p>losses: " + losses + "</p>"));
     player2 = true;
@@ -141,7 +143,8 @@ playersRef.on("child_removed", function (snapshot) {
     chat: snapshot.val().playerName + " has left the game!"
   });
   console.log("someone has left the game!");
-  $("#game-message").empty();
+  var start = $("#start");
+  $("#game-message").html(start);
   $("#player1-choices").empty();
   $("#player2-choices").empty();
   selected1 = false;
