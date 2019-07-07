@@ -195,16 +195,18 @@ $("#submit-msg").on("click", function (event) {
 });
 
 chatRef.on("child_added", function (snapshot) {
-  //display chat message in the chat room
   var chat = snapshot.child("chat").val();
   var who = snapshot.child("name").val();
-  $("#msg-display").prepend($("<p>").html(who + " : " + chat));
-
-  // display result message at #game-message
   var message = snapshot.child("gameMessage").val();
+
   if (message !== null) {
+    // display result message at #game-message
     $("#game-message").html(message).append("<button id='reset'>Play again!</button>");
+  } else {
+    //display chat message in the chat room
+    $("#msg-display").prepend($("<p>").html(who + " : " + chat));
   }
+
 }, function (errorObject) {
   console.log("The read failed: " + errorObject.code);
 });
