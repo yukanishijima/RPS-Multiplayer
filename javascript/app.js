@@ -100,7 +100,6 @@ player1Ref.on("value", function (snapshot) {
 
     $("#player1-name").html(name);
     $("#player1-message").empty();
-    $("#player1-choices").empty();
     $("#player1-score").html($("<p>wins: " + wins + "</p>")).append($("<p>losses: " + losses + "</p>"));
     player1 = true;
   }
@@ -127,7 +126,6 @@ player2Ref.on("value", function (snapshot) {
 
     $("#player2-name").html(name);
     $("#player2-message").empty();
-    $("#player2-choices").empty();
     $("#player2-score").html($("<p>wins: " + wins + "</p>")).append($("<p>losses: " + losses + "</p>"));
     player2 = true;
   }
@@ -220,10 +218,9 @@ playersRef.on("value", function (snapshot) {
           });
         });
       }, 1500);
-
-      //display choices for player 2
     }
 
+    //display choices for player 2
     if (player === player2Name) {
 
       setTimeout(function () {
@@ -233,6 +230,7 @@ playersRef.on("value", function (snapshot) {
 
         $("button").on("click", function () {
           selected2 = true;
+          console.log("button clicked!");
           $("#player2-choices").html("<p class='choice'>" + $(this).text() + "</p>");
           player2Ref.update({
             choice: $(this).text()
@@ -264,6 +262,8 @@ db.ref("/players/player1/choice").on("value", function (snapshot) {
     if (player1Choice !== null && player2Choice !== null) {
 
       setTimeout(function () {
+        $("#player1-message").empty();
+        $("#player2-message").empty();
         $("#player1-choices").html("<p class='choice'>" + player1Choice + "</p>");
         $("#player2-choices").html("<p class='choice'>" + player2Choice + "</p>");
         showResult();
@@ -329,6 +329,8 @@ function showResult() {
 $(document.body).on("click", "#reset", function () {
   selected1 = false;
   selected2 = false;
+  $("#player1-choices").empty();
+  $("#player2-choices").empty();
   player1Ref.update({
     choice: null
   });
