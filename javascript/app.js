@@ -186,9 +186,7 @@ chatRef.on("child_added", function (snapshot) {
   //display result message at #game-message
   var message = snapshot.child("gameMessage").val();
   if (message !== null) {
-    $("#game-message").html(message);
-    $("#player1-name").append("<button id='reset1'>Play again!</button>");  //need to fix
-    $("#player2-name").append("<button id='reset2'>Play again!</button>");  //need to fix
+    $("#game-message").html(message).append("<button id='reset'>Play again!</button>");
   }
 }, function (errorObject) {
   console.log("The read failed: " + errorObject.code);
@@ -211,7 +209,7 @@ playersRef.on("value", function (snapshot) {
 
       setTimeout(function () {
         $("#player1-choices").html($("<button>Rock</button><button>Paper</button><button>Scissors</button>"));
-        $("#player2-choices").html($("<p>Waiting for " + player2Name + " to select!</p>"));
+        $("#player2-message").html($("<p>Waiting for " + player2Name + " to select!</p>"));
         $("#game-message").html("It's your turn!");
 
         $("button").on("click", function () {
@@ -230,7 +228,7 @@ playersRef.on("value", function (snapshot) {
 
       setTimeout(function () {
         $("#player2-choices").html($("<button>Rock</button><button>Paper</button><button>Scissors</button>"));
-        $("#player1-choices").html($("<p>Waiting for " + player1Name + " to select!</p>"));
+        $("#player1-message").html($("<p>Waiting for " + player1Name + " to select!</p>"));
         $("#game-message").html("It's your turn!");
 
         $("button").on("click", function () {
@@ -328,19 +326,18 @@ function showResult() {
   });
 }
 
-$(document.body).on("click", "#reset1", function () {
+$(document.body).on("click", "#reset", function () {
   selected1 = false;
+  selected2 = false;
   player1Ref.update({
     choice: null
   });
-});
-
-$(document.body).on("click", "#reset2", function () {
-  selected2 = false;
   player2Ref.update({
     choice: null
   });
 });
+
+
 
 
 
