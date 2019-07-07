@@ -176,17 +176,15 @@ $("#submit-msg").on("click", function (event) {
     console.log(player);
 
     chatRef.once("value", function () {
-      chatRef.push({
-        chat: $("#player-msg").val().trim()
-      });
-
       if (player === "") {
         chatRef.push({
           name: "anonymous",
+          chat: $("#player-msg").val().trim()
         });
       } else {
         chatRef.push({
           name: player,
+          chat: $("#player-msg").val().trim()
         });
       }
 
