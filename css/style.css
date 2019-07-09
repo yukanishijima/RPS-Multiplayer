@@ -155,13 +155,16 @@ input, select {
   font-family: 'Quicksand', sans-serif;
   font-size: 16px;
 } 
-#game-message p {
+#game-message p, #start p {
   font-family: 'Playfair Display', serif;
   height: 40px;
   margin: 0;
   font-size: 22px;
   color: rgba(185, 185, 150, 1);
   font-style: italic;
+}
+#start {
+  height: 40px;
 }
 .my-border {
   border-bottom: 1px dotted;
@@ -189,14 +192,14 @@ input, select {
   .wrap {
     margin: 1vh;
   }
-  .wrap, header, #game-message, #player1, #player2, #chat {
+  .wrap, header, #game-message, #start, #player1, #player2, #chat {
     border: 0.3vh solid;
   }
   header {
     height: 17vh;
     min-height: 103px;
   }
-  #game-message {
+  #game-message, #start {
     height: 9vh;
   }
   #player1, #player2 {

@@ -52,6 +52,8 @@ $("#submit-name").on("click", function (event) {
           name: "admin",
           chat: player + " joined the game!"
         });
+        $("#start").hide();
+        $("#game-message").show();
         $("#game-message").html("<p>Welcome " + player + "! You're Player 1!</p>");
         player1 = true;
 
@@ -70,12 +72,14 @@ $("#submit-name").on("click", function (event) {
           name: "admin",
           chat: player + " joined the game!"
         });
+        $("#start").hide();
+        $("#game-message").show();
         $("#game-message").html("<p>Welcome " + player + "! You're Player 2!</p>");
         player2 = true;
 
         // if both player 1 and 2 exist, display the message
       } else {
-        $("#start").html("Sorry, the game is full!");
+        $("#start").html("<p>Sorry, the game is full!</p>");
       }
 
     }, function (errorObject) {
@@ -148,7 +152,7 @@ playersRef.on("child_removed", function (snapshot) {
   });
 
   console.log("someone has left the game!");
-  $("#game-message").html($("#start"));
+  $("#game-message").empty();
   $("#player1-choices").empty();
   $("#player2-choices").empty();
 
@@ -215,7 +219,7 @@ chatRef.on("child_added", function (snapshot) {
 
   if (message !== null) {
     // display result message at #game-message
-    $("#game-message").html(message).append("<button id='reset'>Play again!</button>");
+    $("#game-message").html($("<p>" + message + "</p>")).append("<button id='reset'>Play again!</button>");
   } else {
     //display chat message in the chat room
     $("#msg-display").prepend($("<p>").html(who + " : " + chat));
@@ -255,7 +259,7 @@ playersRef.on("value", function (snapshot) {
         $("#player1-choices").html($("<button>Rock</button><button>Paper</button><button>Scissors</button>"));
         $("#player2-message").html($("<p>Waiting for " + player2Name + " to select!</p>"));
         $("#player2-choices").empty();
-        $("#game-message").html("It's your turn!");
+        $("#game-message").html("<p>It's your turn!</p>");
 
         $("button").on("click", function () {
           $("#player1-choices").html("<p class='choice'>" + $(this).text() + "</p>");
@@ -274,7 +278,7 @@ playersRef.on("value", function (snapshot) {
         $("#player2-choices").html($("<button>Rock</button><button>Paper</button><button>Scissors</button>"));
         $("#player1-message").html($("<p>Waiting for " + player1Name + " to select!</p>"));
         $("#player1-choices").empty();
-        $("#game-message").html("It's your turn!");
+        $("#game-message").html("<p>It's your turn!</p>");
 
         $("button").on("click", function () {
           $("#player2-choices").html("<p class='choice'>" + $(this).text() + "</p>");
@@ -382,4 +386,8 @@ $(document.body).on("click", "#reset", function () {
   player2Ref.update({
     choice: null
   });
+});
+
+$(document).ready(function () {
+  $("#game-message").hide();
 });
