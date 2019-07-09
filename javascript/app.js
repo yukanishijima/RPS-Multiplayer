@@ -385,6 +385,7 @@ function showResult() {
 
 $(document.body).on("click", "#reset", function () {
   $(this).hide();
+  $("#game-message").empty();
   player1Ref.update({
     choice: null
   });
