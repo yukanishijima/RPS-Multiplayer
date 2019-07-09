@@ -41,7 +41,7 @@ $("#submit-name").on("click", function (event) {
     playersRef.once("value", function (snapshot) {
 
       // if player1 doesn't exist, assign as player 1
-      if (!snapshot.child("player1").exists()) {
+      if (!snapshot.child("player1").exists() && player !== snapshot.child("player2/playerName").val()) {
         player1Ref.onDisconnect().remove();
         player1Ref.set({
           playerName: player,
@@ -61,7 +61,7 @@ $("#submit-name").on("click", function (event) {
         console.log(snapshot.val()); // null?
 
         //if player1 exists, assign as player 2
-      } else if (!snapshot.child("player2").exists()) {
+      } else if (!snapshot.child("player2").exists() && player !== snapshot.child("player1/playerName").val()) {
         player2Ref.onDisconnect().remove();
         player2Ref.set({
           playerName: player,
@@ -76,6 +76,11 @@ $("#submit-name").on("click", function (event) {
         $("#game-message").show();
         $("#game-message").html("<p>Welcome " + player + "! You're Player 2!</p>");
         player2 = true;
+
+        //if trying to use the same name, 
+      } else if (player !== snapshot.child("player2/playerName").val() || player !== snapshot.child("player1/playerName").val()) {
+        $("#player-name").val("");
+        $("#player-name").attr("placeholder", "Type a different name!");
 
         // if both player 1 and 2 exist, display the message
       } else {
@@ -219,7 +224,7 @@ chatRef.on("child_added", function (snapshot) {
 
   if (message !== null) {
     // display result message at #game-message
-    $("#game-message").html($("<p>" + message + "</p>")).append("<button id='reset'>Play again!</button>");
+    $("#game-message").html($("<p>" + message + "</p>")).append("<button id='reset'>Play again?</button>");
   } else {
     //display chat message in the chat room
     $("#msg-display").prepend($("<p>").html(who + " : " + chat));
