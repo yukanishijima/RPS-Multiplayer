@@ -118,7 +118,7 @@ input, select {
   text-align: center;
   margin: 7px;
 }
-.wrap, header, #game-message, #player1, #player2, #chat {
+.wrap, header, #game-message, #start, #player1, #player2, #chat {
   border: 2px solid;
 }
 
@@ -137,7 +137,7 @@ input, select {
 ------------------------------------------ */
 #submit-name {
   background: rgb(185, 185, 149);
-  border: none;
+  border: 1px solid;
 }
 #player1, #player2 {
   height: 200px;
@@ -151,9 +151,10 @@ input, select {
   font-weight: 600;
   font-size: 25px;
 }
-#player1-name p, #player2-name p {
-  font-family: 'Quicksand', sans-serif;
+#player1-message p, #player2-message p {
+  font-family: 'Playfair Display', serif;
   font-size: 16px;
+  font-style: italic;
 } 
 #game-message p, #start p {
   font-family: 'Playfair Display', serif;
@@ -167,7 +168,7 @@ input, select {
   height: 40px;
 }
 .my-border {
-  border-bottom: 1px dotted;
+  border-bottom: 2px dotted;
   height: 40px;
 }
 #player1-score, #player2-score {
