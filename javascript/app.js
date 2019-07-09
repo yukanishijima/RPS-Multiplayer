@@ -226,9 +226,15 @@ chatRef.on("child_added", function (snapshot) {
 });
 
 //display choices --------------------------------------------------------
+var player1Name = "";
+var player2Name = "";
+
+
 playersRef.on("value", function (snapshot) {
-  var player1Name = snapshot.child("player1/playerName").val();
-  var player2Name = snapshot.child("player2/playerName").val();
+
+  player1Name = snapshot.child("player1/playerName").val();
+  player2Name = snapshot.child("player2/playerName").val();
+
   var player1Selected = snapshot.child("player1/selected1").val();
   var player2Selected = snapshot.child("player2/selected2").val();
   var player1Choice = snapshot.child("player1/choice").val();
@@ -325,27 +331,27 @@ function showResult() {
     console.log("Tie!");
     gameMessage = "Tie!";
   } else if (player1Choice === "Rock" && player2Choice === "Paper") {
-    gameMessage = "Player 2 won!";
+    gameMessage = player2Name + " won!";
     player1Losses++;
     player2Wins++;
   } else if (player1Choice === "Rock" && player2Choice === "Scissors") {
-    gameMessage = "Player 1 won!";
+    gameMessage = player1Name + " won!";
     player2Losses++;
     player1Wins++;
   } else if (player1Choice === "Paper" && player2Choice === "Rock") {
-    gameMessage = "Player 1 won!";
+    gameMessage = player1Name + " won!";
     player2Losses++;
     player1Wins++;
   } else if (player1Choice === "Paper" && player2Choice === "Scissors") {
-    gameMessage = "Player 2 won!";
+    gameMessage = player2Name + " won!";
     player1Losses++;
     player2Wins++;
   } else if (player1Choice === "Scissors" && player2Choice === "Rock") {
-    gameMessage = "Player 2 won!";
+    gameMessage = player2Name + " won!";
     player1Losses++;
     player2Wins++;
   } else if (player1Choice === "Scissors" && player2Choice === "Paper") {
-    gameMessage = "Player 1 won!";
+    gameMessage = player1Name + " won!";
     player2Losses++;
     player1Wins++;
   }
