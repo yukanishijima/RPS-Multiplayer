@@ -1,4 +1,4 @@
-# Rock Paper Scissors ✊✌️🖐️
+# Rock✊ Paper🖐️ Scissors✌️
 
 [Live](https://yukanishijima.github.io/rps-multiplayer/)
 
