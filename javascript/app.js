@@ -336,34 +336,57 @@ function showResult() {
   console.log(player1Choice);
   console.log(player2Choice);
 
+  var winConditions = {
+    Rock: "Scissors",
+    Scissors: "Paper",
+    Paper: "Rock"
+  }
+
+  function didPlayerOneWin(player1Choice, player2Choice) {
+    return winConditions[player1Choice] === player2Choice;
+  }
+
   if (player1Choice === player2Choice) {
     console.log("Tie!");
     gameMessage = "Tie!";
-  } else if (player1Choice === "Rock" && player2Choice === "Paper") {
+  } else if (didPlayerOneWin(player1Choice, player2Choice)) {
+    gameMessage = player1Name + " won!";
+    player1Wins++;
+    player2Losses++;
+  } else {
     gameMessage = player2Name + " won!";
     player1Losses++;
     player2Wins++;
-  } else if (player1Choice === "Rock" && player2Choice === "Scissors") {
-    gameMessage = player1Name + " won!";
-    player2Losses++;
-    player1Wins++;
-  } else if (player1Choice === "Paper" && player2Choice === "Rock") {
-    gameMessage = player1Name + " won!";
-    player2Losses++;
-    player1Wins++;
-  } else if (player1Choice === "Paper" && player2Choice === "Scissors") {
-    gameMessage = player2Name + " won!";
-    player1Losses++;
-    player2Wins++;
-  } else if (player1Choice === "Scissors" && player2Choice === "Rock") {
-    gameMessage = player2Name + " won!";
-    player1Losses++;
-    player2Wins++;
-  } else if (player1Choice === "Scissors" && player2Choice === "Paper") {
-    gameMessage = player1Name + " won!";
-    player2Losses++;
-    player1Wins++;
   }
+
+  // if (player1Choice === player2Choice) {
+  //   console.log("Tie!");
+  //   gameMessage = "Tie!";
+  // } else if (player1Choice === "Rock" && player2Choice === "Paper") {
+  //   gameMessage = player2Name + " won!";
+  //   player1Losses++;
+  //   player2Wins++;
+  // } else if (player1Choice === "Rock" && player2Choice === "Scissors") {
+  //   gameMessage = player1Name + " won!";
+  //   player2Losses++;
+  //   player1Wins++;
+  // } else if (player1Choice === "Paper" && player2Choice === "Rock") {
+  //   gameMessage = player1Name + " won!";
+  //   player2Losses++;
+  //   player1Wins++;
+  // } else if (player1Choice === "Paper" && player2Choice === "Scissors") {
+  //   gameMessage = player2Name + " won!";
+  //   player1Losses++;
+  //   player2Wins++;
+  // } else if (player1Choice === "Scissors" && player2Choice === "Rock") {
+  //   gameMessage = player2Name + " won!";
+  //   player1Losses++;
+  //   player2Wins++;
+  // } else if (player1Choice === "Scissors" && player2Choice === "Paper") {
+  //   gameMessage = player1Name + " won!";
+  //   player2Losses++;
+  //   player1Wins++;
+  // }
 
   console.log(player1Wins);
   console.log(player2Wins);
